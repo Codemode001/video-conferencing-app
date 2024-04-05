@@ -7,4 +7,6 @@ const Error = () => {
 
 export default Error;
 
-const Main = styled.div``;
+const Main = styled.div`
+  color: red;
+`;
