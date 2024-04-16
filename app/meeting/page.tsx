@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,9 +9,12 @@ import {
   faVideoSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
+import navigateTo from "../custom/navigateto";
+
 const Meeting = () => {
   const [isMicOpen, setIsMicOpen] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const toggleMic = () => {
     setIsMicOpen(!isMicOpen);
@@ -19,18 +22,45 @@ const Meeting = () => {
 
   const toggleVideo = () => {
     setIsVideoOpen(!isVideoOpen);
+    if (!isVideoOpen) {
+      startVideo();
+    } else {
+      stopVideo();
+    }
+  };
+
+  const startVideo = async () => {
+    try {
+      const stream: MediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error("Error accessing webcam:", error);
+    }
+  };
+
+  const stopVideo = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
+      tracks.forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+    }
   };
 
   return (
     <Container>
       <MeetingContainer>
-        <Video autoPlay muted loop>
-          <source
-            src="https://www.w3schools.com/tags/movie.mp4"
-            type="video/mp4"
+        {isVideoOpen ? (
+          <Video autoPlay muted ref={videoRef} />
+        ) : (
+          <PlaceHolder
+            src="https://cdn.britannica.com/49/182849-050-4C7FE34F/scene-Iron-Man.jpg"
+            alt="Placeholder"
           />
-          Your browser does not support the video tag.
-        </Video>
+        )}
       </MeetingContainer>
       <Controls>
         <IconContainer onClick={toggleMic}>
@@ -45,13 +75,28 @@ const Meeting = () => {
             size="2x"
           />
         </IconContainer>
-        <Button style={{ backgroundColor: "#d93025" }}>Leave Meeting</Button>
+        <Button
+          style={{ backgroundColor: "#d93025" }}
+          onClick={navigateTo("/home")}
+        >
+          Leave Meeting
+        </Button>
       </Controls>
+      <MeetingID>Meeting ID</MeetingID>
     </Container>
   );
 };
 
 export default Meeting;
+
+const PlaceHolder = styled.img``;
+
+const MeetingID = styled.div`
+  color: white;
+  position: absolute;
+  left: 2rem;
+  bottom: 2.5rem;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -62,8 +107,8 @@ const Container = styled.div`
   background-color: #202124;
   font-family: "Poppins", sans-serif;
   width: 100%;
-  margin: 0; /* Resetting margin */
-  padding: 0; /* Resetting padding */
+  margin: 0;
+  padding: 0;
 `;
 
 const MeetingContainer = styled.div`
@@ -103,6 +148,7 @@ const IconContainer = styled.div`
   cursor: pointer;
   margin-right: 20px;
   transition: background-color 0.3s ease;
+  color: white;
 
   &:hover {
     background-color: #0056b3;
