@@ -1,9 +1,7 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 
-const navigateTo = (path: string) => () => {
-  window.location.href = path;
-};
+import navigateTo from "@/app/custom/navigateto";
 
 const HomePage = () => {
   return (

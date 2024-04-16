@@ -4,6 +4,7 @@ import { CssBaseline, TextField, Link, Grid, Container } from "@mui/material";
 import styled from "styled-components";
 
 import { login } from "../utils/supabase/actions";
+import navigateTo from "../custom/navigateto";
 
 export default function SignInSide() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,7 +62,7 @@ export default function SignInSide() {
             <ButtonsContainer>
               <Login type="submit">Sign In</Login>
               <div style={{ width: "50%", textAlign: "center" }}>
-                <SignUp>CREATE ACCOUNT</SignUp>
+                <SignUp onClick={navigateTo("/sign-up")}>CREATE ACCOUNT</SignUp>
                 <ForgotPass>Forgot Password?</ForgotPass>
               </div>
             </ButtonsContainer>
