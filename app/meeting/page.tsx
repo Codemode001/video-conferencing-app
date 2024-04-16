@@ -1,11 +1,30 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMicrophone,
+  faVideo,
+  faMicrophoneSlash,
+  faVideoSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Meeting = () => {
+  const [isMicOpen, setIsMicOpen] = useState(false);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+
+  const toggleMic = () => {
+    setIsMicOpen(!isMicOpen);
+  };
+
+  const toggleVideo = () => {
+    setIsVideoOpen(!isVideoOpen);
+  };
+
   return (
     <Container>
       <MeetingContainer>
-        <Video controls autoPlay muted>
+        <Video autoPlay muted loop>
           <source
             src="https://www.w3schools.com/tags/movie.mp4"
             type="video/mp4"
@@ -14,8 +33,18 @@ const Meeting = () => {
         </Video>
       </MeetingContainer>
       <Controls>
-        <Button>Open Mic</Button>
-        <Button>Open Video</Button>
+        <IconContainer onClick={toggleMic}>
+          <FontAwesomeIcon
+            icon={isMicOpen ? faMicrophone : faMicrophoneSlash}
+            size="2x"
+          />
+        </IconContainer>
+        <IconContainer onClick={toggleVideo}>
+          <FontAwesomeIcon
+            icon={isVideoOpen ? faVideo : faVideoSlash}
+            size="2x"
+          />
+        </IconContainer>
         <Button style={{ backgroundColor: "#d93025" }}>Leave Meeting</Button>
       </Controls>
     </Container>
@@ -30,12 +59,15 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f0f4f8;
+  background-color: #202124;
   font-family: "Poppins", sans-serif;
+  width: 100%;
+  margin: 0; /* Resetting margin */
+  padding: 0; /* Resetting padding */
 `;
 
 const MeetingContainer = styled.div`
-  width: 80%;
+  width: 60%;
   max-width: 1200px;
   height: 70vh;
   background-color: #fff;
@@ -56,6 +88,25 @@ const Video = styled.video`
 
 const Controls = styled.div`
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+`;
+
+const IconContainer = styled.div`
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 20px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 const Button = styled.button`
@@ -67,7 +118,6 @@ const Button = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin: 0 2rem;
 
   &:hover {
     background-color: #0056b3;
