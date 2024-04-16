@@ -1,5 +1,36 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import { useRouter } from "next/router";
+
+const CreateMeeting = () => {
+  const router = useRouter();
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    router.push("/meeting");
+  };
+
+  return (
+    <Container>
+      <Title>Create a New Meeting</Title>
+      <Subtitle>Enter meeting details below</Subtitle>
+      <FormContainer onSubmit={handleSubmit}>
+        <Label htmlFor="meetingName">Meeting Name:</Label>
+        <Input type="text" id="meetingName" name="meetingName" required />
+        <Label htmlFor="meetingPassword">Meeting Password:</Label>
+        <Input
+          type="password"
+          id="meetingPassword"
+          name="meetingPassword"
+          required
+        />
+        <Button type="submit">Create Meeting</Button>
+      </FormContainer>
+    </Container>
+  );
+};
+
+export default CreateMeeting;
 
 const fadeIn = keyframes`
   from {
@@ -65,30 +96,3 @@ const Button = styled.button`
     background-color: #0056b3;
   }
 `;
-
-const CreateMeeting = () => {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
-
-  return (
-    <Container>
-      <Title>Create a New Meeting</Title>
-      <Subtitle>Enter meeting details below</Subtitle>
-      <FormContainer onSubmit={handleSubmit}>
-        <Label htmlFor="meetingName">Meeting Name:</Label>
-        <Input type="text" id="meetingName" name="meetingName" required />
-        <Label htmlFor="meetingPassword">Meeting Password:</Label>
-        <Input
-          type="password"
-          id="meetingPassword"
-          name="meetingPassword"
-          required
-        />
-        <Button type="submit">Create Meeting</Button>
-      </FormContainer>
-    </Container>
-  );
-};
-
-export default CreateMeeting;

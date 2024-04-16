@@ -34,6 +34,7 @@ export async function signup(formData: FormData) {
 
   if (error) {
     redirect("/error");
+    console.log(error);
   }
 
   revalidatePath("/", "layout");

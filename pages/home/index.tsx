@@ -13,8 +13,8 @@ const HomePage = () => {
       </Title>
       <Subtitle>The place where meetings come to life!</Subtitle>
       <ButtonContainer>
-        <Button onClick={navigateTo("/create-meeting")}>Create Meeting</Button>
-        <Button onClick={navigateTo("/join-meeting")}>Join Meeting</Button>
+        <Button onClick={navigateTo("/meeting")}>Start a Meeting</Button>
+        <Button onClick={navigateTo("/join-meeting")}>Join a Meeting</Button>
       </ButtonContainer>
     </Container>
   );
