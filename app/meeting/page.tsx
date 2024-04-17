@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,12 +9,41 @@ import {
   faVideoSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { createClient } from "../utils/supabase/client";
 import navigateTo from "../custom/navigateto";
+
+const supabase = createClient();
 
 const Meeting = () => {
   const [isMicOpen, setIsMicOpen] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<any>();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [userName, setUserName] = useState<any>();
+
+  const fetchUserEmail = async () => {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (data && !error) {
+        setUserEmail(data.session?.user.email);
+        console.log(userEmail);
+      }
+    } catch (error) {
+      console.error("Error fetching user email:", error);
+    }
+  };
+
+  const fetchUserName = async () => {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (data && !error) {
+        setUserName(data.session?.user.user_metadata.displayName);
+        console.log(userName);
+      }
+    } catch (error) {
+      console.error("Error fetching user email:", error);
+    }
+  };
 
   const toggleMic = () => {
     setIsMicOpen(!isMicOpen);
@@ -50,6 +79,11 @@ const Meeting = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUserEmail();
+    fetchUserName();
+  }, []);
+
   return (
     <Container>
       <MeetingContainer>
@@ -61,6 +95,7 @@ const Meeting = () => {
             alt="Placeholder"
           />
         )}
+        <UserEmail>{userName ? userName : userEmail}</UserEmail>
       </MeetingContainer>
       <Controls>
         <IconContainer onClick={toggleMic}>
@@ -98,6 +133,15 @@ const MeetingID = styled.div`
   bottom: 2.5rem;
 `;
 
+const UserEmail = styled.div`
+  color: white;
+  z-index: 99999;
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  font-weight: bold;
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -112,6 +156,7 @@ const Container = styled.div`
 `;
 
 const MeetingContainer = styled.div`
+  position: relative;
   width: 60%;
   max-width: 1200px;
   height: 70vh;
@@ -123,6 +168,7 @@ const MeetingContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 3rem;
+  background-color: gray;
 `;
 
 const Video = styled.video`

@@ -1,25 +1,72 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
+import { createClient } from "../utils/supabase/client";
 import navigateTo from "../custom/navigateto";
 
+const supabase = createClient();
+
 const SignUpPage = () => {
-  const handleSubmit = (e: any) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: { data: { displayName: name } },
+      });
+      if (error) {
+        throw error;
+      }
+      alert("Sign up successful! Please check your email for verification.");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Sign up error:", error);
+      alert("Sign up failed. Please try again.");
+    }
   };
 
   return (
     <SignUpContainer>
       <SignUpForm onSubmit={handleSubmit}>
         <h2 style={{ marginBottom: "1rem" }}>Sign Up</h2>
-        <SignUpInput type="text" placeholder="Username" />
-        <SignUpInput type="email" placeholder="Email" />
-        <SignUpInput type="password" placeholder="Password" />
-        <SignUpInput type="password" placeholder="Confirm Password" />
-        <SignUpButton type="submit" onClick={navigateTo("/")}>
-          Sign Up
-        </SignUpButton>
+        <SignUpInput
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <SignUpInput
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <SignUpInput
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <SignUpInput
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <SignUpButton type="submit">Sign Up</SignUpButton>
       </SignUpForm>
     </SignUpContainer>
   );
