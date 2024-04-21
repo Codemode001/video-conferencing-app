@@ -1,15 +1,19 @@
 "use client";
-import * as React from "react";
-import { CssBaseline, TextField, Link, Grid, Container } from "@mui/material";
+import React, { useState } from "react";
+import { CssBaseline, TextField, Container } from "@mui/material";
 import styled from "styled-components";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Fade } from "react-awesome-reveal";
 
 import { login } from "../utils/supabase/actions";
 import navigateTo from "../custom/navigateto";
 
 export default function SignInSide() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsLoading(true);
     const data = new FormData(event.currentTarget);
     const formData = new FormData();
     formData.append("email", data.get("email") as string);
@@ -19,57 +23,71 @@ export default function SignInSide() {
       await login(formData);
     } catch (error) {
       console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <MainContainer>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <Logo src="https://res.cloudinary.com/dhhamkkue/image/upload/v1713231977/WiMeet/Black_White_Elegant_Monogram_Initial_Name_Logo_p6dk87.png" />
+    <Fade triggerOnce>
+      <MainContainer>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <Logo src="https://res.cloudinary.com/dhhamkkue/image/upload/v1713231977/WiMeet/Black_White_Elegant_Monogram_Initial_Name_Logo_p6dk87.png" />
+            </div>
+            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+
+              <ButtonsContainer>
+                <Login type="submit">
+                  {" "}
+                  {isLoading ? (
+                    <CircularProgress style={{ color: "white" }} />
+                  ) : (
+                    "Sign in"
+                  )}
+                </Login>
+                <div style={{ width: "50%", textAlign: "center" }}>
+                  <SignUp onClick={navigateTo("/sign-up")}>
+                    CREATE ACCOUNT
+                  </SignUp>
+                  <ForgotPass>Forgot Password?</ForgotPass>
+                </div>
+              </ButtonsContainer>
+            </form>
           </div>
-          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <ButtonsContainer>
-              <Login type="submit">Sign In</Login>
-              <div style={{ width: "50%", textAlign: "center" }}>
-                <SignUp onClick={navigateTo("/sign-up")}>CREATE ACCOUNT</SignUp>
-                <ForgotPass>Forgot Password?</ForgotPass>
-              </div>
-            </ButtonsContainer>
-          </form>
-        </div>
-      </Container>
-    </MainContainer>
+        </Container>
+      </MainContainer>
+    </Fade>
   );
 }
 

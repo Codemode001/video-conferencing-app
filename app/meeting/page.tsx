@@ -7,7 +7,9 @@ import {
   faVideo,
   faMicrophoneSlash,
   faVideoSlash,
+  faVolumeHigh,
 } from "@fortawesome/free-solid-svg-icons";
+import { Fade } from "react-awesome-reveal";
 
 import { createClient } from "../utils/supabase/client";
 import navigateTo from "../custom/navigateto";
@@ -19,6 +21,7 @@ const Meeting = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<any>();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const audioStreamRef = useRef<any>(null);
   const [userName, setUserName] = useState<any>();
 
   const fetchUserEmail = async () => {
@@ -45,19 +48,6 @@ const Meeting = () => {
     }
   };
 
-  const toggleMic = () => {
-    setIsMicOpen(!isMicOpen);
-  };
-
-  const toggleVideo = () => {
-    setIsVideoOpen(!isVideoOpen);
-    if (!isVideoOpen) {
-      startVideo();
-    } else {
-      stopVideo();
-    }
-  };
-
   const startVideo = async () => {
     try {
       const stream: MediaStream = await navigator.mediaDevices.getUserMedia({
@@ -79,50 +69,102 @@ const Meeting = () => {
     }
   };
 
+  const startAudio = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+    }
+  };
+
+  const stopAudio = () => {
+    if (audioStreamRef.current) {
+      const tracks: MediaStreamTrack[] = audioStreamRef.current.getTracks();
+      tracks.forEach((track: MediaStreamTrack) => track.stop());
+      setIsMicOpen(false);
+    }
+  };
+
+  const toggleMic = () => {
+    setIsMicOpen(!isMicOpen);
+    if (!isMicOpen) {
+      startAudio();
+    } else {
+      stopAudio();
+    }
+  };
+
+  const toggleVideo = () => {
+    setIsVideoOpen(!isVideoOpen);
+    if (!isVideoOpen) {
+      startVideo();
+    } else {
+      stopVideo();
+    }
+  };
+
   useEffect(() => {
     fetchUserEmail();
     fetchUserName();
   }, []);
 
   return (
-    <Container>
-      <MeetingContainer>
-        {isVideoOpen ? (
-          <Video autoPlay muted ref={videoRef} />
-        ) : (
-          <PlaceHolder
-            src="https://cdn.britannica.com/49/182849-050-4C7FE34F/scene-Iron-Man.jpg"
-            alt="Placeholder"
-          />
-        )}
-        <UserEmail>{userName ? userName : userEmail}</UserEmail>
-      </MeetingContainer>
-      <Controls>
-        <IconContainer onClick={toggleMic}>
-          <FontAwesomeIcon
-            icon={isMicOpen ? faMicrophone : faMicrophoneSlash}
-            size="2x"
-          />
-        </IconContainer>
-        <IconContainer onClick={toggleVideo}>
-          <FontAwesomeIcon
-            icon={isVideoOpen ? faVideo : faVideoSlash}
-            size="2x"
-          />
-        </IconContainer>
-        <Button
-          style={{ backgroundColor: "#d93025" }}
-          onClick={navigateTo("/home")}
-        >
-          Leave Meeting
-        </Button>
-      </Controls>
-      <MeetingID>Meeting ID</MeetingID>
-    </Container>
+    <Fade triggerOnce>
+      <Container>
+        <MeetingContainer>
+          <Indicators>
+            <FontAwesomeIcon
+              icon={isMicOpen ? faVolumeHigh : faMicrophoneSlash}
+              size="1x"
+            />
+          </Indicators>
+          {isVideoOpen ? (
+            <Video autoPlay muted ref={videoRef} />
+          ) : (
+            <PlaceHolder
+              src="https://cdn.britannica.com/49/182849-050-4C7FE34F/scene-Iron-Man.jpg"
+              alt="Placeholder"
+            />
+          )}
+          <UserEmail>{userName ? userName : userEmail}</UserEmail>
+        </MeetingContainer>
+        <Controls>
+          <IconContainer onClick={toggleMic}>
+            <FontAwesomeIcon
+              icon={isMicOpen ? faMicrophone : faMicrophoneSlash}
+              size="2x"
+            />
+          </IconContainer>
+          <IconContainer onClick={toggleVideo}>
+            <FontAwesomeIcon
+              icon={isVideoOpen ? faVideo : faVideoSlash}
+              size="2x"
+            />
+          </IconContainer>
+          <Button
+            style={{ backgroundColor: "#d93025" }}
+            onClick={navigateTo("/home")}
+          >
+            Leave Meeting
+          </Button>
+        </Controls>
+        <MeetingID>Meeting ID</MeetingID>
+      </Container>
+    </Fade>
   );
 };
 
 export default Meeting;
+
+const Indicators = styled.div`
+  color: white;
+  z-index: 99999;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+`;
 
 const PlaceHolder = styled.img``;
 
