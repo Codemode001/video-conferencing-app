@@ -1,22 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { Slide, Fade } from "react-awesome-reveal";
+import {
+  MeetingProvider,
+  MeetingConsumer,
+  useMeeting,
+  useParticipant,
+} from "@videosdk.live/react-sdk";
+import ReactPlayer from "react-player";
 
 import navigateTo from "@/app/custom/navigateto";
 import { createClient } from "@/app/utils/supabase/client";
+import { authToken, createMeeting } from "../../app/utils/API";
 
 const supabase = createClient();
+
+function JoinScreen({
+  getMeetingAndToken,
+}: {
+  getMeetingAndToken: (meeting?: string) => void;
+}) {
+  return null;
+}
+
+function ParticipantView({ participantId }: { participantId: string }) {
+  return null;
+}
+
+function Controls() {
+  return null;
+}
+
+function MeetingView({
+  onMeetingLeave,
+  meetingId,
+}: {
+  onMeetingLeave: () => void;
+  meetingId: string;
+}) {
+  return null;
+}
 
 const HomePage = () => {
   const [userEmail, setUserEmail] = useState<any>();
   const [toggleProfile, setToggleProfile] = useState(false);
   const [userName, setUserName] = useState<any>();
+  const [userId, setuserId] = useState<any>();
+  const [meetingId, setMeetingId] = useState<string | null>(null);
 
   const fetchUserEmail = async () => {
     try {
       const { data, error } = await supabase.auth.getSession();
       if (data && !error) {
         setUserEmail(data.session?.user.email);
+        setuserId(data.session?.user.id);
         console.log(userEmail);
       }
     } catch (error) {
@@ -45,6 +82,38 @@ const HomePage = () => {
       alert(error.message);
     }
   }
+
+  async function createMeetingSupa() {
+    const { data, error } = await supabase.from("meetings").insert([
+      {
+        host: userId,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error inserting data:", error.message);
+      return null;
+    }
+
+    window.location.href = "/meeting";
+    console.log("Meeting data inserted successfully:", data);
+    return data;
+  }
+
+  const getMeetingAndToken = async (id?: string) => {
+    const meetingId =
+      id == null ? await createMeeting({ token: authToken }) : id;
+    setMeetingId(meetingId);
+  };
+
+  const onClick = async () => {
+    getMeetingAndToken(meetingId !== null ? meetingId : undefined);
+    console.log(meetingId);
+  };
+
+  const onMeetingLeave = () => {
+    setMeetingId(null);
+  };
 
   useEffect(() => {
     fetchUserEmail();
@@ -75,7 +144,7 @@ const HomePage = () => {
       </Fade>
       <Fade direction="right">
         <ButtonContainer>
-          <Button onClick={navigateTo("/meeting")}>Start a Meeting</Button>
+          <Button onClick={onClick}>Start a Meeting</Button>
           <Button onClick={navigateTo("/join-meeting")}>Join a Meeting</Button>
         </ButtonContainer>
       </Fade>

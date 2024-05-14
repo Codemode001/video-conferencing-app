@@ -127,6 +127,7 @@ const Login = styled.button`
   border-radius: 10px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  border: none;
 
   &:hover {
     transform: translateY(-5px);
