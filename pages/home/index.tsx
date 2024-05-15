@@ -1,13 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { Slide, Fade } from "react-awesome-reveal";
-import {
-  MeetingProvider,
-  MeetingConsumer,
-  useMeeting,
-  useParticipant,
-} from "@videosdk.live/react-sdk";
-import ReactPlayer from "react-player";
+import { useRouter } from "next/router";
 
 import navigateTo from "@/app/custom/navigateto";
 import { createClient } from "@/app/utils/supabase/client";
@@ -15,38 +9,13 @@ import { authToken, createMeeting } from "../../app/utils/API";
 
 const supabase = createClient();
 
-function JoinScreen({
-  getMeetingAndToken,
-}: {
-  getMeetingAndToken: (meeting?: string) => void;
-}) {
-  return null;
-}
-
-function ParticipantView({ participantId }: { participantId: string }) {
-  return null;
-}
-
-function Controls() {
-  return null;
-}
-
-function MeetingView({
-  onMeetingLeave,
-  meetingId,
-}: {
-  onMeetingLeave: () => void;
-  meetingId: string;
-}) {
-  return null;
-}
-
 const HomePage = () => {
   const [userEmail, setUserEmail] = useState<any>();
   const [toggleProfile, setToggleProfile] = useState(false);
   const [userName, setUserName] = useState<any>();
   const [userId, setuserId] = useState<any>();
   const [meetingId, setMeetingId] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchUserEmail = async () => {
     try {
@@ -108,19 +77,16 @@ const HomePage = () => {
 
   const newMeeting = async () => {
     getMeetingAndToken(meetingId !== null ? meetingId : undefined);
-  };
-
-  const onMeetingLeave = () => {
-    setMeetingId(null);
+    router.push({
+      pathname: "/room",
+      query: { meetingID: meetingId },
+    });
   };
 
   useEffect(() => {
     fetchUserEmail();
     fetchUserName();
   });
-  useEffect(() => {
-    console.log(meetingId);
-  }, [meetingId]);
 
   return (
     <Container>

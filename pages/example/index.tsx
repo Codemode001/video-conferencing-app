@@ -1,11 +1,7 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
-import {
-  MeetingProvider,
-  MeetingConsumer,
-  useMeeting,
-  useParticipant,
-} from "@videosdk.live/react-sdk";
+import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import ReactPlayer from "react-player";
+import styled from "styled-components";
 
 function ParticipantView({ participantId }: { participantId: string }) {
   const micRef = useRef<HTMLAudioElement>(null);
@@ -64,6 +60,17 @@ function ParticipantView({ participantId }: { participantId: string }) {
   );
 }
 
+function Controls() {
+  const { leave, toggleMic, toggleWebcam } = useMeeting();
+  return (
+    <div>
+      <button onClick={() => leave()}>Leave</button>
+      <button onClick={() => toggleMic()}>toggleMic</button>
+      <button onClick={() => toggleWebcam()}>toggleWebcam</button>
+    </div>
+  );
+}
+
 export default function MeetingView({
   onMeetingLeave,
   meetingId,
@@ -87,9 +94,9 @@ export default function MeetingView({
 
   return (
     <div className="container">
-      <h3>Meeting Id: {meetingId}</h3>
       {joined && joined == "JOINED" ? (
         <div>
+          <h3>Meeting Id: {meetingId}</h3>
           <Controls />
           {[...participants.keys()].map((participantId) => (
             <ParticipantView
@@ -97,29 +104,43 @@ export default function MeetingView({
               key={participantId}
             />
           ))}
-          {/* {Array.from(participants.keys()).map((participantId) => (
-            <ParticipantView
-              participantId={participantId}
-              key={participantId}
-            />
-          ))} */}
         </div>
-      ) : joined && joined == "JOINING" ? (
-        <p>Joining the meeting...</p>
       ) : (
-        <button onClick={joinMeeting}>Join</button>
+        <JoinMeetingContainer>
+          <h3>Meeting Id: {meetingId}</h3>
+          {joined && joined == "JOINING" ? (
+            <p>Joining the meeting...</p>
+          ) : (
+            <JoinButton onClick={joinMeeting}>Join</JoinButton>
+          )}
+        </JoinMeetingContainer>
       )}
     </div>
   );
 }
 
-function Controls() {
-  const { leave, toggleMic, toggleWebcam } = useMeeting();
-  return (
-    <div>
-      <button onClick={() => leave()}>Leave</button>
-      <button onClick={() => toggleMic()}>toggleMic</button>
-      <button onClick={() => toggleWebcam()}>toggleWebcam</button>
-    </div>
-  );
-}
+const JoinMeetingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`;
+
+const JoinButton = styled.div`
+  margin-top: 3rem;
+  background-color: #15a9ff;
+  width: 10rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+
+  :hover {
+    background-color: #f8ac0e;
+  }
+`;

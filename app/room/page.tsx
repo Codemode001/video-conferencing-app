@@ -1,12 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import {
-  MeetingProvider,
-  MeetingConsumer,
-  useMeeting,
-  useParticipant,
-} from "@videosdk.live/react-sdk";
+import { MeetingProvider } from "@videosdk.live/react-sdk";
 import { authToken } from "../utils/API";
 import MeetingView from "@/pages/example";
 
