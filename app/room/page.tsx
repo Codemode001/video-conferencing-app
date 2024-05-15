@@ -36,7 +36,6 @@ const Room = () => {
       token={authToken}
     >
       <MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
-      <button onClick={() => console.log("hello")}>refresh</button>
     </MeetingProvider>
   );
 };

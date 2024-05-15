@@ -1,57 +1,17 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useRouter } from "next/router";
-import { createMeeting, authToken } from "@/app/utils/API";
-import {
-  MeetingProvider,
-  MeetingConsumer,
-  useMeeting,
-  useParticipant,
-} from "@videosdk.live/react-sdk";
-import ReactPlayer from "react-player";
-import MeetingView from "../example";
-
-function JoinScreen({
-  getMeetingAndToken,
-}: {
-  getMeetingAndToken: (meeting?: string) => void;
-}) {
-  return null;
-}
 
 const JoinMeeting = () => {
-  const [meetingCode, setMeetingCode] = useState("");
-  const [meetingId, setMeetingId] = useState<string | null>("jm4b-2w8p-pvdo");
+  const [meetingId, setMeetingId] = useState<string | null>(null);
   const router = useRouter();
-  const [isMeeting, setIsMeeting] = useState(false);
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log("Joining meeting with code:", meetingCode);
-    router.push("/meeting");
-  };
-
-  const getMeetingAndToken = async (id?: string) => {
-    const meetingId =
-      id == null ? await createMeeting({ token: authToken }) : id;
-    setMeetingId(meetingId);
-  };
-
-  const joinMeeting = async () => {
-    getMeetingAndToken(meetingId !== null ? meetingId : undefined);
-  };
 
   const passMeeing = (e: any) => {
     e.preventDefault();
-    // router.push(`/room?meetingId=${meetingId}`);
     router.push({
       pathname: "/room",
       query: { meetingID: meetingId },
     });
-  };
-
-  const onMeetingLeave = () => {
-    setMeetingId(null);
   };
 
   const doNothing = () => {
@@ -62,38 +22,19 @@ const JoinMeeting = () => {
     <Container>
       <Title>Join a Meeting</Title>
       <Subtitle>Enter the meeting code below</Subtitle>
-      {/* <FormContainer onSubmit={handleSubmit}> */}
       <FormContainer>
         <Label htmlFor="meetingCode">Meeting Code:</Label>
         <Input
           type="text"
-          // id="meetingCode"
-          // name="meetingCode"
-          // value={meetingCode}
-          // onChange={(e) => setMeetingCode(e.target.value)}
           onChange={(e) => {
             setMeetingId(e.target.value);
           }}
           required
         />
-        <Button onClick={passMeeing}>Join Meeting</Button>
+        <Button onClick={meetingId ? passMeeing : doNothing}>
+          Join Meeting
+        </Button>
       </FormContainer>
-      {/* 
-      <MeetingProvider
-        config={{
-          meetingId: meetingId ?? "",
-          micEnabled: true,
-          webcamEnabled: true,
-          name: "C.V. Raman",
-          debugMode: false,
-        }}
-        token={authToken}
-      >
-        <MeetingView
-          meetingId={meetingId ?? ""}
-          onMeetingLeave={onMeetingLeave}
-        />
-      </MeetingProvider> */}
     </Container>
   );
 };
