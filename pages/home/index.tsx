@@ -106,9 +106,8 @@ const HomePage = () => {
     setMeetingId(meetingId);
   };
 
-  const onClick = async () => {
+  const newMeeting = async () => {
     getMeetingAndToken(meetingId !== null ? meetingId : undefined);
-    console.log(meetingId);
   };
 
   const onMeetingLeave = () => {
@@ -119,6 +118,9 @@ const HomePage = () => {
     fetchUserEmail();
     fetchUserName();
   });
+  useEffect(() => {
+    console.log(meetingId);
+  }, [meetingId]);
 
   return (
     <Container>
@@ -144,7 +146,7 @@ const HomePage = () => {
       </Fade>
       <Fade direction="right">
         <ButtonContainer>
-          <Button onClick={onClick}>Start a Meeting</Button>
+          <Button onClick={newMeeting}>Start a Meeting</Button>
           <Button onClick={navigateTo("/join-meeting")}>Join a Meeting</Button>
         </ButtonContainer>
       </Fade>
