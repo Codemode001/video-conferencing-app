@@ -12,6 +12,7 @@ const Room = () => {
 
   const onMeetingLeave = () => {
     console.log("leave");
+    router.push("/home");
   };
   console.log(router);
   useEffect(() => {

@@ -2,6 +2,7 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
 
 function ParticipantView({ participantId }: { participantId: string }) {
   const micRef = useRef<HTMLAudioElement>(null);
@@ -84,19 +85,25 @@ export default function MeetingView({
       setJoined("JOINED");
     },
     onMeetingLeft: () => {
-      onMeetingLeave();
+      leaveMeeting();
     },
   });
+
   const joinMeeting = () => {
     setJoined("JOINING");
     join();
   };
 
+  const router = useRouter();
+  const leaveMeeting = () => {
+    router.push("/home");
+  };
+
   return (
     <div className="container">
       {joined && joined == "JOINED" ? (
-        <div>
-          <h3>Meeting Id: {meetingId}</h3>
+        <Container>
+          <MeetingIdText>Meeting Id: {meetingId}</MeetingIdText>
           <Controls />
           {[...participants.keys()].map((participantId) => (
             <ParticipantView
@@ -104,7 +111,7 @@ export default function MeetingView({
               key={participantId}
             />
           ))}
-        </div>
+        </Container>
       ) : (
         <JoinMeetingContainer>
           <h3>Meeting Id: {meetingId}</h3>
@@ -118,6 +125,13 @@ export default function MeetingView({
     </div>
   );
 }
+
+const MeetingIdText = styled.h3`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: white;
+`;
 
 const JoinMeetingContainer = styled.div`
   display: flex;
@@ -143,4 +157,17 @@ const JoinButton = styled.div`
   :hover {
     background-color: #f8ac0e;
   }
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #202124;
+  font-family: "Poppins", sans-serif;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 `;
