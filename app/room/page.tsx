@@ -9,6 +9,7 @@ const Room = () => {
   const name = useSearchParams();
   const meetingId = name?.get("meetingID");
   const router = useRouter();
+  const userName = name?.get("name");
 
   const onMeetingLeave = () => {
     console.log("leave");
@@ -32,7 +33,7 @@ const Room = () => {
       }}
       token={authToken}
     >
-      <MeetingView meetingId={meetingId || ""} />
+      <MeetingView meetingId={meetingId || ""} userName={userName || ""} />
     </MeetingProvider>
   );
 };

@@ -4,7 +4,13 @@ import ReactPlayer from "react-player";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 
-function ParticipantView({ participantId }: { participantId: string }) {
+function ParticipantView({
+  participantId,
+  participantName,
+}: {
+  participantId: string;
+  participantName: String;
+}) {
   const micRef = useRef<HTMLAudioElement>(null);
   const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
     useParticipant(participantId);
@@ -37,8 +43,8 @@ function ParticipantView({ participantId }: { participantId: string }) {
   return (
     <div key={participantId}>
       <p>
-        Participant: {displayName} | Webcam: {webcamOn ? "ON" : "OFF"} | Mic:{" "}
-        {micOn ? "ON" : "OFF"}
+        Participant: {participantName} | Webcam: {webcamOn ? "ON" : "OFF"} |
+        Mic: {micOn ? "ON" : "OFF"}
       </p>
       <audio ref={micRef} autoPlay muted={isLocal} />
       {webcamOn && (
@@ -72,7 +78,13 @@ function Controls() {
   );
 }
 
-export default function MeetingView({ meetingId }: { meetingId: string }) {
+export default function MeetingView({
+  meetingId,
+  userName,
+}: {
+  meetingId: string;
+  userName: String;
+}) {
   const [joined, setJoined] = useState<string | null>(null);
   const { join, participants } = useMeeting({
     onMeetingJoined: () => {
@@ -103,6 +115,7 @@ export default function MeetingView({ meetingId }: { meetingId: string }) {
             <ParticipantView
               participantId={participantId}
               key={participantId}
+              participantName={userName || ""}
             />
           ))}
         </Container>
