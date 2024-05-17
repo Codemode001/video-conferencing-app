@@ -13,7 +13,7 @@ const HomePage = () => {
   const [userEmail, setUserEmail] = useState<any>();
   const [toggleProfile, setToggleProfile] = useState(false);
   const [userName, setUserName] = useState<any>();
-  const [userId, setuserId] = useState<any>();
+  const [userId, setUserId] = useState<any>();
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const router = useRouter();
 
@@ -22,7 +22,7 @@ const HomePage = () => {
       const { data, error } = await supabase.auth.getSession();
       if (data && !error) {
         setUserEmail(data.session?.user.email);
-        setuserId(data.session?.user.id);
+        setUserId(data.session?.user.id);
         console.log(userEmail);
       }
     } catch (error) {
@@ -64,7 +64,6 @@ const HomePage = () => {
       return null;
     }
 
-    window.location.href = "/meeting";
     console.log("Meeting data inserted successfully:", data);
     return data;
   }
@@ -73,20 +72,23 @@ const HomePage = () => {
     const meetingId =
       id == null ? await createMeeting({ token: authToken }) : id;
     setMeetingId(meetingId);
+    return meetingId;
   };
 
   const newMeeting = async () => {
-    getMeetingAndToken(meetingId !== null ? meetingId : undefined);
+    const id = await getMeetingAndToken(
+      meetingId !== null ? meetingId : undefined
+    );
     router.push({
       pathname: "/room",
-      query: { meetingID: meetingId },
+      query: { meetingID: id, name: userName },
     });
   };
 
   useEffect(() => {
     fetchUserEmail();
     fetchUserName();
-  });
+  }, []);
 
   return (
     <Container>

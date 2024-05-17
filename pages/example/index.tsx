@@ -72,13 +72,7 @@ function Controls() {
   );
 }
 
-export default function MeetingView({
-  onMeetingLeave,
-  meetingId,
-}: {
-  onMeetingLeave: () => void;
-  meetingId: string;
-}) {
+export default function MeetingView({ meetingId }: { meetingId: string }) {
   const [joined, setJoined] = useState<string | null>(null);
   const { join, participants } = useMeeting({
     onMeetingJoined: () => {

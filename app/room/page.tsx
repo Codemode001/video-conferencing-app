@@ -6,24 +6,25 @@ import { authToken } from "../utils/API";
 import MeetingView from "@/pages/example";
 
 const Room = () => {
-  const meetingId = "jm4b-2w8p-pvdo";
-  const router = useRouter();
   const name = useSearchParams();
+  const meetingId = name?.get("meetingID");
+  const router = useRouter();
 
   const onMeetingLeave = () => {
     console.log("leave");
     router.push("/home");
   };
-  console.log(router);
+
   useEffect(() => {
     console.log(router);
     console.log(name?.get("meetingID"));
+    console.log(name?.get("name"));
   });
 
   return (
     <MeetingProvider
       config={{
-        meetingId,
+        meetingId: meetingId || "",
         micEnabled: true,
         webcamEnabled: true,
         name: "C.V. Raman",
@@ -31,7 +32,7 @@ const Room = () => {
       }}
       token={authToken}
     >
-      <MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
+      <MeetingView meetingId={meetingId || ""} />
     </MeetingProvider>
   );
 };
