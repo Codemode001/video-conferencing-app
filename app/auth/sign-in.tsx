@@ -40,8 +40,8 @@ export default function SignInSide() {
               alignItems: "center",
             }}
           >
-            <div>
-              <Logo src="https://res.cloudinary.com/dhhamkkue/image/upload/v1713231977/WiMeet/Black_White_Elegant_Monogram_Initial_Name_Logo_p6dk87.png" />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Logo src="https://res.cloudinary.com/dhhamkkue/image/upload/v1716387491/WiMeet/WiMeet_logo_1_-Photoroom.png-Photoroom_bshsux.png" />
             </div>
             <form onSubmit={handleSubmit} style={{ width: "100%" }}>
               <TextField
@@ -135,7 +135,7 @@ const Login = styled.button`
 `;
 
 const Logo = styled.img`
-  width: 90%;
+  width: 50%;
 `;
 
 const MainContainer = styled.div`

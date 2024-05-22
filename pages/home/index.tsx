@@ -79,6 +79,7 @@ const HomePage = () => {
     const id = await getMeetingAndToken(
       meetingId !== null ? meetingId : undefined
     );
+    console.log(id);
     router.push({
       pathname: "/room",
       query: { meetingID: id, name: userName },
@@ -175,8 +176,7 @@ const Container = styled.div`
   justify-content: center;
   min-height: 100vh;
   text-align: center;
-  background-color: #f0f4f8;
-  font-family: "Poppins", sans-serif;
+  font-family: helvetica;
   animation: ${fadeIn} 0.5s ease;
   position: relative;
 
