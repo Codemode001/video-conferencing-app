@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import ReactPlayer from "react-player";

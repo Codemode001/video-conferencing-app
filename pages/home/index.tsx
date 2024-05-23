@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { Slide, Fade } from "react-awesome-reveal";

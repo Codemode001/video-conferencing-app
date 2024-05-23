@@ -28,7 +28,8 @@
     "react-awesome-reveal": "^4.2.8",
     "react-dom": "^18",
     "react-player": "^2.16.0",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "webpack": "^5.91.0"
   },
   "devDependencies": {
     "@types/node": "^20",
