@@ -1,9 +1,17 @@
 "use client";
 import React, { useEffect } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { MeetingProvider } from "@videosdk.live/react-sdk";
+import { useRouter, useSearchParams } from "next/navigation";
+// import { MeetingProvider } from "@videosdk.live/react-sdk";
 import { authToken } from "../utils/API";
-import MeetingView from "@/pages/example";
+// import MeetingView from "@/pages/example";
+import dynamic from "next/dynamic";
+
+const MeetingProvider = dynamic(
+  () =>
+    import("@videosdk.live/react-sdk").then((module) => module.MeetingProvider),
+  { ssr: false }
+);
+const MeetingView = dynamic(() => import("@/pages/example"), { ssr: false });
 
 const Room = () => {
   const name = useSearchParams();
