@@ -3,12 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MeetingProvider } from "@videosdk.live/react-sdk";
 import { authToken } from "../utils/API";
-// import MeetingView from "@/pages/example";
-import dynamic from "next/dynamic";
-
-const MeetingView = dynamic(() => import("@/pages/example"), {
-  ssr: false,
-});
+import MeetingView from "@/pages/example";
 
 const Room = () => {
   const name = useSearchParams();

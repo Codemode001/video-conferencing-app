@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import ReactPlayer from "react-player";
@@ -108,7 +109,6 @@ export default function MeetingView({
   };
 
   const { leave, toggleMic, toggleWebcam } = useMeeting();
-  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const leaveMeeting = () => {
     router.push("/home");
@@ -117,14 +117,6 @@ export default function MeetingView({
 
   const [isMicOpen, setIsMicOpen] = useState(true);
   const [isVideoOpen, setIsVideoOpen] = useState(true);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return <div>Loading...</div>; // Or any placeholder for SSR
-  }
 
   const micToggle = () => {
     toggleMic();

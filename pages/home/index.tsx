@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Slide, Fade } from "react-awesome-reveal";
 import { useRouter } from "next/router";
@@ -117,6 +117,7 @@ const HomePage = () => {
         <ButtonContainer>
           <Button onClick={newMeeting}>Start a Meeting</Button>
           <Button onClick={navigateTo("/join-meeting")}>Join a Meeting</Button>
+          <Button onClick={navigateTo("/team")}>View Team</Button>
         </ButtonContainer>
       </Fade>
     </Container>

@@ -57,7 +57,6 @@ const Container = styled.div`
   justify-content: center;
   min-height: 100vh;
   text-align: center;
-  background-color: #f0f4f8;
   font-family: "Poppins", sans-serif;
   animation: ${fadeIn} 0.5s ease;
 `;
